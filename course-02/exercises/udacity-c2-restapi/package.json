@@ -2,9 +2,9 @@
   "name": "udacity-c2-restapi",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.js",
+  "main": "src/server.ts",
   "scripts": {
-    "start": "node .",
+    "start": "node ./src/server.ts",
     "tsc": "tsc",
     "dev": "ts-node-dev ./src/server.ts",
     "prod": "tsc && node ./www/server.js",
@@ -39,6 +39,7 @@
     "chai-http": "^4.3.0",
     "mocha": "^6.2.3",
     "rimraf": "^3.0.2",
+    "ts-node": "^8.10.2",
     "ts-node-dev": "^1.1.1",
     "tslint": "^5.20.1",
     "typescript": "^3.9.7"
