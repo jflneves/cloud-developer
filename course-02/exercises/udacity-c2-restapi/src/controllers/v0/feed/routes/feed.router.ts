@@ -18,7 +18,7 @@ router.get('/', async (req: Request, res: Response) => {
 
 router.get("/:id",async (req: Request, res: Response) => {
     let { id } = req.params;
-    const item = await FeedItem.findById(id);
+    const item = await FeedItem.findByPk(id);
     res.send(item);
 });
 
@@ -27,7 +27,7 @@ router.patch('/:id',
     requireAuth, 
     async (req: Request, res: Response) => {
         let { id } = req.params;
-        const item = await FeedItem.findById(id);
+        const item = await FeedItem.findByPk(id);
         if(!item) {
             res.status(404).send("Resource not found!")
         } else {
@@ -36,10 +36,11 @@ router.patch('/:id',
                 item.caption = caption;
             }
             const fileName = req.body.url;
-            if(!fileName) {
-                item.url = AWS.getGetSignedUrl(fileName)
+            if(fileName) {
+                item.url = fileName
             }
             const saved_item = await item.save();
+            saved_item.url = AWS.getGetSignedUrl(saved_item.url);
             res.status(200).send(saved_item)
         }
 });
