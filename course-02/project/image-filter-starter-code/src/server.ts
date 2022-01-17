@@ -14,15 +14,26 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   app.use(bodyParser.json());
 
   app.get( "/filteredimage", async ( req, res ) => {
-      const imageUrl = req.query.image_url
-      const filePath = await filterImageFromURL(imageUrl.toString())
+      // return type is string | string[] | ParsedQs | ParsedQs[] so we keep it any until we verify is not null
+      let imageUrl : any = req.query.image_url;
+      if(imageUrl == null) {
+        res.status(422).send("Query parameter 'image_url' must not be null");
+        return;
+      }
+      let filePath : string
+      try {
+        filePath  = await filterImageFromURL(imageUrl.toString())
+      } catch (error) {
+        res.status(400).send("Failed to process url image. Must be valid image url")
+        return;
+      }
       res.sendFile(filePath)
       res.addListener("close", () => {
         deleteLocalFiles([filePath])
       })
     } 
   );
-  
+
   // Root Endpoint
   // Displays a simple message to the user
   app.get( "/", async ( req, res ) => {
